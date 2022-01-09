@@ -30,10 +30,6 @@ Route::post('user/reset-password', [ AuthController::class,'resetPassword']);
 //////////////////////////////// End Auth //////////////////////////////////
 
 
-// Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-//     return $request->user();
-// });
-
 Route::prefix('customer')->middleware('auth:api')->group(function () {
     Route::post('logout', [ AuthController::class,'logout']);
 
