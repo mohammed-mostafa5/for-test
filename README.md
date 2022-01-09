@@ -1,4 +1,4 @@
-# Forbex Mini App
+# Orbex Mini App
 
 ## Authentication 
 * Mini backend project with two types of users ( Admin - Customer ).
