@@ -17,6 +17,7 @@ class AdminsController extends Controller
      */
     public function index(Request $request)
     {
+        // get filtered admins
         $admins = User::where('is_admin', true)
                 ->when($request->email, function ($admins) use ($request){
                     $admins->where('email', 'like', '%' . $request->email . '%');
@@ -41,11 +42,13 @@ class AdminsController extends Controller
             'email'    => ['required','email', 'unique:users,email'],
             'password' => ['required', 'confirmed','max:32', Password::defaults()],
             'avatar'   => ['required', 'image', 'mimes:jpg,png,jpeg'],
+            'role_id'  => ['nullable', 'exists:roles,id'],
         ])->validated();
 
         $validator['is_admin'] = true;
 
         $admin = User::create($validator);
+        $admin->syncRoles([$request->role_id]);
 
         return response()->json(compact('admin'));
     }
@@ -76,10 +79,13 @@ class AdminsController extends Controller
             'email'    => ['sometimes','email', "unique:users,email," . $id],
             'password' => ['sometimes', 'confirmed','max:32', Password::defaults()],
             'avatar'   => ['sometimes', 'image', 'mimes:jpg,png,jpeg'],
+            'role_id'  => ['nullable', 'exists:roles,id'],
         ])->validated();
 
         $admin = User::findOrFail($id);
         $admin->update($validator);
+        $admin->syncRoles([$request->role_id]);
+
 
         return response()->json(compact('admin'));
     }

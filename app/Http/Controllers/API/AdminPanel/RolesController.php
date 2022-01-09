@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API\AdminPanel;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Spatie\Permission\Models\Role;
 
 class RolesController extends Controller
 {
@@ -14,7 +15,8 @@ class RolesController extends Controller
      */
     public function index()
     {
-        //
+        $roles = Role::get();
+        return response()->json(compact('roles'));
     }
 
     /**
@@ -25,7 +27,12 @@ class RolesController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $role = Role::create(['name' => $request->name]);
+
+        $role->syncPermissions(request('permissions'));
+
+        return response()->json(compact('role'));
+
     }
 
     /**
@@ -36,7 +43,8 @@ class RolesController extends Controller
      */
     public function show($id)
     {
-        //
+        $role = Role::findOrFail($id);
+        return response()->json(compact('role'));
     }
 
     /**
@@ -48,7 +56,12 @@ class RolesController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $role = Role::findOrFail($id);
+        $role->update(['name' => $request->name]);
+
+        $role->syncPermissions(request('permissions'));
+
+        return response()->json(compact('role'));
     }
 
     /**
@@ -59,6 +72,9 @@ class RolesController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $role = Role::findOrFail($id);
+        $role->delete();
+
+        return response()->json(['message' => 'role deleted successfully.']);
     }
 }

@@ -17,6 +17,7 @@ class CustomersController extends Controller
      */
     public function index(Request $request)
     {
+        // get filtered customers
         $customers = User::where('is_admin', false)
                 ->when($request->email, function ($customers) use ($request){
                     $customers->where('email', 'like', '%' . $request->email . '%');

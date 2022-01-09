@@ -1,10 +1,10 @@
 @component('mail::message')
 
-# Email Verification Mail
+# Verification Mail
 
-Thanks {{ $user->name }} for your registeration.
+Welcome {{ $user->name }} ,
 
-Use this code to verify your email:
+Use this code to verify your account:
 
 <h2 style="text-align: center">{{ $user->verification_code }}</h2>
 
